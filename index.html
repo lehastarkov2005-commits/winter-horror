@@ -11,7 +11,6 @@
             font-family: 'Times New Roman', serif;
             color: white;
             text-shadow: 2px 2px 4px black;
-            cursor: pointer; /* Показываем что можно кликать */
         }
         .overlay {
             background-color: rgba(0, 0, 0, 0.7);
@@ -23,44 +22,76 @@
             text-align: center;
             padding: 20px;
         }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
-        }
-        p {
-            font-size: 1.5em;
-            max-width: 600px;
-            margin-bottom: 40px;
-        }
-        /* Стили для кнопки запуска */
+        /* Стили для кнопки */
         .start-button {
             background: rgba(255, 255, 255, 0.2);
             border: 2px solid white;
             color: white;
-            padding: 15px 40px;
-            font-size: 1.2em;
+            padding: 20px 50px;
+            font-size: 1.5em;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             transition: all 0.3s ease;
+            font-family: 'Times New Roman', serif;
         }
         .start-button:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
         }
-        .hint {
-            margin-top: 20px;
-            font-style: italic;
-            opacity: 0.8;
+        /* Стили для текста, который появится */
+        .story-text {
+            display: none;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+        .story-text h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-in-out;
+        }
+        .story-text p {
+            font-size: 1.5em;
+            max-width: 600px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-in-out 0.5s; /* Задержка для второго абзаца */
+        }
+        .webcam-text {
+            font-size: 1.3em;
+            margin-top: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-in-out 1s; /* Задержка для третьего абзаца */
+            color: #ff4444;
+        }
+        /* Класс для показа текста */
+        .show-text {
+            display: block;
+            opacity: 1;
+        }
+        .show-text h1,
+        .show-text p,
+        .show-text .webcam-text {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
     <div class="overlay">
-        <h1>ВЕБ-КАМЕРЫ ВКЛЮЧИТЬ</h1>
-        <p>Когда воет метель и волк за окном, герой понимает - пора выходить...</p>
+        <!-- Кнопка, которая видна сначала -->
+        <div class="start-button" id="startButton">Взглянуть в метель</div>
         
-        <div class="start-button" id="startButton">▶ ЗАПУСТИТЬ АТМОСФЕРУ</div>
-        <div class="hint">(Нажмите кнопку или кликните в любом месте)</div>
+        <!-- Текст, который появится после нажатия -->
+        <div class="story-text" id="storyText">
+            <h1>Тишина обманчива...</h1>
+            <p>Когда воет метель и волк за окном, герой понимает - пора выходить.</p>
+            <p>Мороз скрипит под ногами, а в белой пелене таится нечто большее, чем просто холод.</p>
+            <div class="webcam-text">Прошу включить веб камеру если она у вас есть</div>
+        </div>
     </div>
 
     <audio id="myAudio" loop>
@@ -70,23 +101,25 @@
     <script>
         var audio = document.getElementById('myAudio');
         var startButton = document.getElementById('startButton');
-        var body = document.body;
+        var storyText = document.getElementById('storyText');
 
-        function startAudio() {
-            audio.play().then(function() {
-                // Скрываем кнопку после запуска
-                startButton.style.display = 'none';
-                document.querySelector('.hint').style.display = 'none';
-            }).catch(function(error) {
+        function startExperience() {
+            // Скрываем кнопку
+            startButton.style.display = 'none';
+            
+            // Запускаем звук
+            audio.play().catch(function(error) {
                 console.log('Ошибка воспроизведения:', error);
             });
+            
+            // Показываем текст с анимацией
+            setTimeout(function() {
+                storyText.classList.add('show-text');
+            }, 500); // Небольшая задержка перед появлением текста
         }
 
         // Запуск по кнопке
-        startButton.addEventListener('click', startAudio);
-        
-        // Запуск по клику в любом месте
-        body.addEventListener('click', startAudio);
+        startButton.addEventListener('click', startExperience);
     </script>
 </body>
 </html>
